@@ -35,5 +35,28 @@ This is a public repository, available for commercial use under the permissive M
      - Navigate to the script location: [Revenue Oracle Notebook](scripts/revenue-oracle.ipynb)
    - Open the notebook in a Jupyter environment and run the cells to begin modeling.
    
-4. **Customization**:
+4. **Git hooks** (anyone committing to this repository):
+
+   ```bash
+   pre-commit install
+   ```
+
+   That is all an outside contributor needs. The hooks format nothing and need no account; they
+   refuse a commit that adds a large file, an office document, or a dataset or archive.
+
+   **Secret scanning, strongly recommended for anyone with push access.** One more command, once
+   per clone:
+
+   ```bash
+   pre-commit install -c .pre-commit-config-ggshield.yaml --hook-type pre-push
+   ```
+
+   Those are two different git hooks, `.git/hooks/pre-commit` and `.git/hooks/pre-push`, so they
+   coexist. The second scans the commits being pushed and refuses the push if it finds a
+   credential. It needs a GitGuardian account: create one if you do not have it, then either
+   export `GITGUARDIAN_API_KEY` or run `ggshield auth login` once. It is deliberately not in
+   `.pre-commit-config.yaml`, which everyone runs, because it fails loudly without an account and
+   would otherwise break the first commit of anyone cloning this public repository.
+
+5. **Customization**:
    - Adjust the assumptions within the notebook to fit your specific use-case scenarios. Modify parameters to observe their impact on revenue projections.

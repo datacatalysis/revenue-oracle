@@ -1,0 +1,37 @@
+# Standard guards; see Confluence 290422785. Run `pre-commit install` once after cloning,
+# or these are configured but never run.
+#
+# Public repository, so the secret scan is opt-in and lives in
+# .pre-commit-config-ggshield.yaml. See the README.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      # Only newly added files are checked, so anything large already tracked is unaffected.
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  # Documents, datasets and archives are not code, and removing one after the fact does not
+  # remove it from the history.
+  - repo: local
+    hooks:
+      - id: no-office-documents
+        name: block office documents
+        entry: >-
+          Office documents do not belong in git. Commit code and text, and keep
+          the document with the project's other documents.
+        language: fail
+        files: '(?i)\.(odt|ods|odp|doc|docx|xls|xlsx|xlsm|ppt|pptx)$'
+
+      - id: no-datasets-or-archives
+        name: block datasets and archives
+        entry: >-
+          Datasets and archives do not belong in git. Track them with DVC and
+          commit the .dvc stub instead.
+        language: fail
+        files: '(?i)\.(zip|7z|rar|tar|tgz|gz|parquet|feather|h5|hdf5|pkl|pickle|npy|npz|joblib|sqlite|db)$'
+        exclude: '^(tests?|test_data)/'
