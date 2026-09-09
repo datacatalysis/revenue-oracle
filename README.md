@@ -34,7 +34,7 @@ This is a public repository, available for commercial use under the permissive M
    - Execute the primary notebook to start using the tool.
      - Navigate to the script location: [Revenue Oracle Notebook](scripts/revenue-oracle.ipynb)
    - Open the notebook in a Jupyter environment and run the cells to begin modeling.
-   
+
 4. **Git hooks** (anyone committing to this repository):
 
    ```bash
