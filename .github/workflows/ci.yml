@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# One run per commit. A branch with an open pull request is already covered by the
+# pull_request trigger, so the push trigger is limited to main to stop every commit
+# building twice.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hooks:
+    name: pre-commit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install pre-commit==4.6.2
+
+      - name: Run pre-commit hooks
+        # No staged diff exists in CI and this job carries no API key, so the secret
+        # scan is left to the dedicated GitGuardian workflow.
+        env:
+          SKIP: ggshield
+        run: pre-commit run --all-files
